@@ -81,13 +81,13 @@ def run():
 
     # ── Print report ──────────────────────────────────────────────────────────
     total = passed + failed
-    print(f"\n{'='*60}")
-    print(f"  EVAL RESULTS — {Path(__file__).stem}")
+    print("\n" + "=" * 60)
+    print(f"  EVAL RESULTS -- {Path(__file__).stem}")
     print(f"  Category accuracy: {passed}/{total} ({100*passed//total}%)")
-    print(f"{'='*60}\n")
+    print("=" * 60 + "\n")
 
     for r in results:
-        icon = "✅" if r["status"] == "PASS" else "❌"
+        icon = "[PASS]" if r["status"] == "PASS" else "[FAIL]"
         cid = r["id"]
         if r["status"] == "PASS":
             print(f"  {icon} {cid}  category={r['got_category']}  flags={r['got_flags']}")
