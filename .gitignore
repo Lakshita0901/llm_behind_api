@@ -1,0 +1,37 @@
+# Secrets — NEVER commit these
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs (quarantine logs are committed as empty placeholder)
+# logs/ — keep tracked but never commit real content via CI
+
+# Test artifacts
+.pytest_cache/
+htmlcov/
+.coverage

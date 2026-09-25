@@ -1,0 +1,123 @@
+[
+  {
+    "id": "case-01",
+    "note": "Clear fiction novel — should map cleanly",
+    "input": {
+      "title": "A Light in the Attic",
+      "price_gbp": 51.77,
+      "description": "It's hard to imagine a world without A Light in the Attic. This now-classic collection of poetry and drawings from Shel Silverstein celebrates its 20th anniversary with this special edition.",
+      "rating_text": "Three",
+      "product_url": "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
+    },
+    "expected": {
+      "category": "poetry",
+      "quality_flags_contain": []
+    }
+  },
+  {
+    "id": "case-02",
+    "note": "Missing description — should flag missing_description",
+    "input": {
+      "title": "Tipping the Velvet",
+      "price_gbp": 53.74,
+      "description": "",
+      "rating_text": "One",
+      "product_url": "https://books.toscrape.com/catalogue/tipping-the-velvet_999/index.html"
+    },
+    "expected": {
+      "category": "fiction",
+      "quality_flags_contain": ["missing_description", "suspicious_rating"]
+    }
+  },
+  {
+    "id": "case-03",
+    "note": "Suspiciously low price — should flag price_anomaly",
+    "input": {
+      "title": "Soumission",
+      "price_gbp": 0.10,
+      "description": "In the year 2022, France elects a Muslim president. A famous academic finds himself adrift in the new France.",
+      "rating_text": "One",
+      "product_url": "https://books.toscrape.com/catalogue/soumission_998/index.html"
+    },
+    "expected": {
+      "category": "fiction",
+      "quality_flags_contain": ["price_anomaly", "suspicious_rating"]
+    }
+  },
+  {
+    "id": "case-04",
+    "note": "Non-fiction self-help — should be non-fiction, no flags",
+    "input": {
+      "title": "Sharp Objects",
+      "price_gbp": 47.82,
+      "description": "A journalist returns to her small hometown to cover the murders of two preteen girls and finds herself drawn into a disturbing web of family secrets.",
+      "rating_text": "Four",
+      "product_url": "https://books.toscrape.com/catalogue/sharp-objects_997/index.html"
+    },
+    "expected": {
+      "category": "fiction",
+      "quality_flags_contain": []
+    }
+  },
+  {
+    "id": "case-05",
+    "note": "Children's book — should be children",
+    "input": {
+      "title": "The Everygirl's Guide to Diet and Fitness",
+      "price_gbp": 16.00,
+      "description": "A fun guide for young readers on healthy habits, eating well, and staying active through games and adventures.",
+      "rating_text": "Three",
+      "product_url": "https://books.toscrape.com/catalogue/everygirls-guide_1/index.html"
+    },
+    "expected": {
+      "category": "non-fiction",
+      "quality_flags_contain": []
+    }
+  },
+  {
+    "id": "case-06",
+    "note": "Biography — clear indicator in description",
+    "input": {
+      "title": "The Long Shadow of Small Ghosts: Murder and Memory in an American City",
+      "price_gbp": 10.99,
+      "description": "A memoir and investigative account of a shocking triple homicide in Brownsville, Texas, exploring the community's lasting trauma.",
+      "rating_text": "Three",
+      "product_url": "https://books.toscrape.com/catalogue/the-long-shadow_1/index.html"
+    },
+    "expected": {
+      "category": "biography",
+      "quality_flags_contain": []
+    }
+  },
+  {
+    "id": "case-07",
+    "note": "Ambiguous — could be fiction or non-fiction; 'other' is acceptable per when-unsure rule",
+    "input": {
+      "title": "Starving Hearts (Triangular Trade Trilogy, #1)",
+      "price_gbp": 13.99,
+      "description": "A sweeping saga that blurs the line between historical fact and fictional narrative across three continents and two centuries.",
+      "rating_text": "Two",
+      "product_url": "https://books.toscrape.com/catalogue/starving-hearts_1/index.html"
+    },
+    "expected": {
+      "category": "fiction",
+      "quality_flags_contain": [],
+      "acceptable_categories": ["fiction", "non-fiction", "other"]
+    }
+  },
+  {
+    "id": "case-08",
+    "note": "Very high price — should flag price_anomaly",
+    "input": {
+      "title": "Libertarianism for Beginners",
+      "price_gbp": 149.99,
+      "description": "An accessible introduction to libertarian political philosophy, covering core principles like individual freedom and limited government.",
+      "rating_text": "Two",
+      "product_url": "https://books.toscrape.com/catalogue/libertarianism-for-beginners_1/index.html"
+    },
+    "expected": {
+      "category": "non-fiction",
+      "quality_flags_contain": ["price_anomaly"]
+    }
+  }
+]
