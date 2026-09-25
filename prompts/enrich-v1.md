@@ -1,6 +1,9 @@
 # enrich-v1.md — Book enrichment prompt
 <!-- prompt_version: enrich-v1 -->
 <!-- last_updated: 2026-09-25 -->
+<!-- wired_to: src/llm/enrich_logic.py::enrich_book() -->
+<!-- temperature: 0.2 -->
+<!-- user_message: JSON-encoded book record (never concatenated into system prompt) -->
 
 ## Role
 You classify and summarize books for a bookstore catalog.
