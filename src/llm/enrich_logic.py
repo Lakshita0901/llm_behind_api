@@ -227,13 +227,14 @@ def enrich_book(book_input: dict) -> EnrichOutput:
         },
     ]
 
+    raw2 = raw  # fallback: use first raw output if repair call itself fails
+    in_tok2, out_tok2 = 0, 0
     repair_start = time.monotonic()
     try:
         raw2, in_tok2, out_tok2 = _call_model(repair_messages)
         repair_duration_ms = (time.monotonic() - repair_start) * 1000
 
         result = _parse_and_validate(raw2)
-        repaired = True
         _log_call(
             prompt_version=PROMPT_VERSION,
             model=MODEL,
@@ -247,7 +248,7 @@ def enrich_book(book_input: dict) -> EnrichOutput:
     except (json.JSONDecodeError, ValueError, ValidationError) as repair_err:
         # Both attempts failed — quarantine and raise
         _quarantine(
-            raw=raw2 if "raw2" in dir() else raw,
+            raw=raw2,
             book_input=book_input,
             error=str(repair_err),
             repaired=True,
@@ -255,8 +256,8 @@ def enrich_book(book_input: dict) -> EnrichOutput:
         _log_call(
             prompt_version=PROMPT_VERSION,
             model=MODEL,
-            input_tokens=in_tok,
-            output_tokens=out_tok,
+            input_tokens=in_tok + in_tok2,
+            output_tokens=out_tok + out_tok2,
             duration_ms=(time.monotonic() - start) * 1000,
             repaired=True,
         )
