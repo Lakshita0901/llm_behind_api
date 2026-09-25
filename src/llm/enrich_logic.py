@@ -8,6 +8,10 @@ Core LLM orchestration:
   - Quarantines failures to logs/quarantine.jsonl
   - Logs cost/usage data per call
   - Handles timeout → 504, 429/5xx with backoff+jitter, never retries 400/401/403
+
+Quarantine log format (one JSON line per failure):
+  {"ts":..., "prompt_version":..., "model":..., "repaired":bool,
+   "error":..., "raw_output":..., "input":{...}}
 """
 import json
 import logging
