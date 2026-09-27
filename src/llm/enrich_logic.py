@@ -216,7 +216,8 @@ def enrich_book(book_input: dict) -> EnrichOutput:
         )
         return result
     except (json.JSONDecodeError, ValueError, ValidationError) as first_err:
-        logger.warning("First parse failed: %s — attempting repair", first_err)
+        _first_err = first_err  # save before Python 3 deletes the 'as' binding on block exit
+        logger.warning("First parse failed: %s — attempting repair", _first_err)
 
     # ── One repair retry ──────────────────────────────────────────────────────
     repair_messages = messages + [
@@ -224,7 +225,7 @@ def enrich_book(book_input: dict) -> EnrichOutput:
         {
             "role": "user",
             "content": (
-                f"Your previous answer was rejected for this reason: {first_err}\n"
+                f"Your previous answer was rejected for this reason: {_first_err}\n"
                 "Return only corrected JSON matching the schema exactly. "
                 "No prose, no fences, just the JSON object."
             ),

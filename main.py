@@ -9,7 +9,10 @@ from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from starlette.requests import Request
 
 load_dotenv()
 
@@ -51,6 +54,21 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# ── Input-validation error handler (422 → 400) ────────────────────────────────
+@app.exception_handler(RequestValidationError)
+async def validation_error_handler(request: Request, exc: RequestValidationError):
+    """Return 400 (not FastAPI's default 422) for invalid request bodies.
+    The first offending field is included in the detail message."""
+    first = exc.errors()[0]
+    # 'loc' is a tuple like ('body', 'title') or ('body', 'price_gbp')
+    field = str(first["loc"][-1]) if first.get("loc") else "unknown"
+    return JSONResponse(
+        status_code=400,
+        content={"detail": f"Invalid input: '{field}' — {first['msg']}"},
+    )
+
 
 # ── Routes ────────────────────────────────────────────────────────────────────
 from src.routes.enrich import router as enrich_router

@@ -20,8 +20,11 @@ _api_key = os.environ.get("LLM_API_KEY", "")
 MODEL = os.environ.get("LLM_MODEL", "openrouter/auto")
 
 # Explicit 30-second timeout — never rely on the SDK's 10-minute default
+# max_retries=0 — retry logic lives entirely in enrich_logic._call_model;
+#   the SDK default of 2 would create a hidden second retry layer.
 client = OpenAI(
     base_url=_base_url,
     api_key=_api_key,
     timeout=30.0,
+    max_retries=0,
 )
