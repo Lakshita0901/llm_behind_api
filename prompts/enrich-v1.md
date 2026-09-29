@@ -24,12 +24,12 @@ Return ONLY a JSON object with these three fields, no wrapping, no prose:
 ```
 
 ### `category` — pick exactly ONE:
-- `fiction`
-- `non-fiction`
-- `children`
-- `poetry`
-- `biography`
-- `other`
+- `fiction` — novels, short stories, or any invented narrative
+- `non-fiction` — factual books for a general adult audience (history, science, self-help, politics, etc.) that are NOT memoirs or biographies
+- `children` — books written for young readers or children (picture books, middle-grade, YA health/activity guides for kids)
+- `poetry` — collections of poems or verse
+- `biography` — memoirs, autobiographies, or first/third-person accounts of a real person's life or experiences
+- `other` — use only when the book genuinely does not fit any category above
 
 ### `quality_flags` — include ALL that apply (may be empty list `[]`):
 - `missing_description` — description is empty or absent

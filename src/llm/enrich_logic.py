@@ -155,7 +155,7 @@ def _call_model(messages: list, attempt: int = 0) -> tuple[str, int, int]:
                 model=MODEL,
                 messages=messages,
                 temperature=0.2,
-                max_tokens=300,
+                max_tokens=600,
             )
             content = resp.choices[0].message.content or ""
             usage = resp.usage

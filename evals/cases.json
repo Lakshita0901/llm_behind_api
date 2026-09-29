@@ -70,7 +70,7 @@
       "product_url": "https://books.toscrape.com/catalogue/everygirls-guide_1/index.html"
     },
     "expected": {
-      "category": "non-fiction",
+      "category": "children",
       "quality_flags_contain": []
     }
   },
