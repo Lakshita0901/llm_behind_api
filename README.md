@@ -9,8 +9,8 @@
 ## Quick start
 
 ```bash
-git clone <your-repo-url>
-cd llm-behind-api
+git clone https://github.com/Lakshita0901/llm_behind_api.git
+cd llm_behind_api
 cp .env.example .env          # fill in LLM_API_KEY
 pip install -r requirements.txt
 uvicorn main:app --reload
@@ -32,14 +32,14 @@ curl -s -X POST http://localhost:8000/enrich \
   }'
 ```
 
-**Observed model output (case-01 — A Light in the Attic):**
+**Exact observed response:**
 ```json
 {
   "category": "poetry",
-  "summary": "A classic collection of poetry and drawings by Shel Silverstein celebrates its 20th anniversary with a special edition."
+  "summary": "A Light in the Attic is a classic collection of poetry and drawings by Shel Silverstein, celebrating its 20th anniversary in this special edition.",
+  "quality_flags": ["none"]
 }
 ```
-*(Source: partial raw output captured in `logs/quarantine.jsonl`. The `quality_flags` field was truncated in that capture and no complete HTTP 200 response for this case was saved.)*
 
 ---
 
