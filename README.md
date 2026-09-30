@@ -24,22 +24,22 @@ uvicorn main:app --reload
 curl -s -X POST http://localhost:8000/enrich \
   -H "Content-Type: application/json" \
   -d '{
-    "title": "The Shadow of the Wind",
-    "price_gbp": 12.99,
-    "description": "A young boy discovers a mysterious book and embarks on a quest to find its author.",
-    "rating_text": "Five",
-    "product_url": "https://books.toscrape.com/catalogue/shadow-of-the-wind_1.html"
+    "title": "A Light in the Attic",
+    "price_gbp": 51.77,
+    "description": "It's hard to imagine a world without A Light in the Attic. This now-classic collection of poetry and drawings from Shel Silverstein celebrates its 20th anniversary with this special edition.",
+    "rating_text": "Three",
+    "product_url": "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
   }'
 ```
 
-**Exact response:**
+**Observed model output (case-01 — A Light in the Attic):**
 ```json
 {
-  "category": "fiction",
-  "summary": "A young boy's discovery of a mysterious book sets him on an unforgettable journey through post-war Barcelona.",
-  "quality_flags": ["none"]
+  "category": "poetry",
+  "summary": "A classic collection of poetry and drawings by Shel Silverstein celebrates its 20th anniversary with a special edition."
 }
 ```
+*(Source: partial raw output captured in `logs/quarantine.jsonl`. The `quality_flags` field was truncated in that capture and no complete HTTP 200 response for this case was saved.)*
 
 ---
 
@@ -78,11 +78,11 @@ Returns `400 Bad Request` naming the offending field(s) — before any model cal
 
 ## Provider / model + swapping
 
-| Env var | Default | Notes |
-|---------|---------|-------|
+| Env var | Configured | Notes |
+|---------|------------|-------|
 | `LLM_BASE_URL` | `https://openrouter.ai/api/v1` | Any OpenAI-compatible endpoint |
 | `LLM_API_KEY` | *(your key)* | OpenRouter key or `ollama` for local |
-| `LLM_MODEL` | `openrouter/auto` | Any model name the provider accepts |
+| `LLM_MODEL` | `openrouter/free` | Tested/configured model. If `LLM_MODEL` is unset, the code falls back to `openrouter/auto`. |
 
 **To switch to Ollama (no key needed):**
 ```env
@@ -115,7 +115,7 @@ LLM_MODEL=gemma3:1b
 
 | Date | Prompt version | Score |
 |------|---------------|-------|
-| 2026-09-25 | enrich-v1 | **7/8 (87%)** — case-05 category ambiguous (non-fiction vs children) |
+| 2026-09-30 | enrich-v1 | **7/8 (87%)** — case-02 transient structural/quarantine failure (model returned no parseable JSON; single repair attempt also failed) |
 
 Run evals yourself (server must be running):
 ```bash
@@ -126,18 +126,18 @@ python evals/run_evals.py
 
 ## Cost log sample
 
-One real call (OpenRouter free tier):
+Example observed COST_LOG entry (one real call, OpenRouter free tier):
 
 ```json
-{"ts":"2026-09-25T12:30:01Z","prompt_version":"enrich-v1","model":"openrouter/auto","input_tokens":412,"output_tokens":48,"duration_ms":1840,"repaired":false}
+{"ts":"2026-09-29T19:19:04Z","prompt_version":"enrich-v1","model":"openrouter/free","input_tokens":1001,"output_tokens":326,"duration_ms":13663,"repaired":false}
 ```
 
-**Estimated cost at 10,000 requests/day on a paid model (e.g., GPT-4o-mini at $0.15/1M input, $0.60/1M output):**
-- Input: 412 tokens × 10,000 = 4.12M tokens → ~$0.62/day
-- Output: 48 tokens × 10,000 = 0.48M tokens → ~$0.29/day
-- **Total ≈ $0.91/day (~$27/month)**
+**Illustrative estimate at 10,000 requests/day (not a guaranteed current provider bill) using $0.15/1M input, $0.60/1M output:**
+- Input: 1,001 tokens × 10,000 = 10.01M tokens → ~$1.50/day
+- Output: 326 tokens × 10,000 = 3.26M tokens → ~$1.96/day
+- **Total ≈ $3.46/day (~$104/month)**
 
-On OpenRouter free tier: $0.00 (subject to 50 req/day and rate limits).
+On OpenRouter free tier: $0.00 (subject to rate limits).
 
 ---
 
@@ -154,7 +154,7 @@ POST /enrich
     ↓
 BookRecord (Pydantic input validation — 400 on bad input)
     ↓
-LLM_ENABLED=false? → return FALLBACK (503 / deterministic)
+LLM_ENABLED=false? → return FALLBACK (200, deterministic EnrichOutput)
 LLM_STUB=1?        → return STUB (hardcoded schema-valid JSON)
     ↓
 enrich_book() — loads prompts/enrich-v1.md as system prompt
