@@ -1,7 +1,7 @@
 [
   {
     "id": "case-01",
-    "note": "Clear fiction novel — should map cleanly",
+    "note": "Clear poetry collection — should map cleanly",
     "input": {
       "title": "A Light in the Attic",
       "price_gbp": 51.77,
@@ -46,7 +46,7 @@
   },
   {
     "id": "case-04",
-    "note": "Non-fiction self-help — should be non-fiction, no flags",
+    "note": "Fiction thriller — should be fiction, no flags",
     "input": {
       "title": "Sharp Objects",
       "price_gbp": 47.82,
